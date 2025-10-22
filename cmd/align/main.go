@@ -1,11 +1,16 @@
 package main
 
 import (
+	_ "embed"
 	"io"
 	"os"
+	"strings"
 )
 
-const version = "0.1.0"
+//go:embed VERSION
+var versionFile string
+
+var version = strings.TrimSpace(versionFile)
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
