@@ -13,9 +13,9 @@ func main() {
 
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		return printUsage(stderr)
+		return printHelp(stdout)
 	}
-	
+
 	command := args[0]
 	
 	switch command {

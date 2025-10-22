@@ -2,6 +2,12 @@
 
 Users need to discover available commands and understand basic usage without consulting external documentation.
 
+## Display help when no command provided
+
+When align is invoked without any arguments, it displays the help message and exits with code 0. This provides the same output as `align help`.
+
+**Test:** `Alge/aligned/cmd/align.TestNoArgsShowsHelp`
+
 ## Display help with help command
 
 The `align help` command displays help information.

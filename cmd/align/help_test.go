@@ -7,6 +7,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNoArgsShowsHelp(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "no args should exit with code 0")
+	assert.NotEmpty(t, stdout.String(), "should display help output")
+	assert.Contains(t, stdout.String(), "Validate that specifications are covered by tests")
+	assert.Contains(t, stdout.String(), "align <command> [options]")
+}
+
 func TestHelpCommand(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	exitCode := run([]string{"help"}, &stdout, &stderr)
