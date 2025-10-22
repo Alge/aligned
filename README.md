@@ -15,6 +15,11 @@ Aligned does not automatically solve all your problems, but it:
 go install github.com/Alge/aligned/cmd/align@latest
 ```
 
+Make sure `$HOME/go/bin` is in your PATH. If `align` command is not found, add this to your `~/.bashrc` or `~/.zshrc`:
+```bash
+export PATH="$PATH:$HOME/go/bin"
+```
+
 Or build from source:
 ```bash
 git clone https://github.com/Alge/aligned.git
