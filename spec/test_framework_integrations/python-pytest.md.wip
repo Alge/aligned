@@ -1,0 +1,26 @@
+# Pytest (Python) [IMPLEMENTS: Connector Interface]
+
+The Pytest connector integrates Aligned with pytests built-in testing framework.
+
+## Detect framework presence
+
+Check if the `pytest` command is available in the system PATH.
+
+**Test:** ``
+
+## Discover tests
+
+Run `pytest --collect-only -q` to list all tests in the project and its subdirectories, returning package-qualified test names.
+
+**Test:** ``
+
+## Parse test output
+
+Extract package-qualified test names from `go test -list` output, handling the format where test names are listed followed by package information.
+
+**Test:** ``
+
+## Handle nested directories
+Correctly discover tests in nested directory structures and return them with their full qualified names.
+
+**Test:** ``
