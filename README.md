@@ -7,7 +7,7 @@ Aligned does not automatically solve all your problems, but it:
  * Tries to help you write actionable, testable technical specifications
  * Tries to make the gap between non-technical product owners and development teams smaller by providing a single source of truth about what the system should do that can be read and understood by both sides.
 
-**Note:** This project was developed using AI-assisted development, where I served as product owner and architect—writing specifications, designing the system architecture, and validating implementations.
+**Note:** This is a hobby project was developed using AI-assisted development, where I mainly served as product owner and architect—writing specifications, designing the system architecture, and validating implementations.
 
 ## Installation
 
