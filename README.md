@@ -98,3 +98,13 @@ Trying to live what we preach, new code should be added in these steps:
 5. Verify that the specification passes using `make align`
 
 Once all tests in the interface exists and passes, you are done!
+
+## Development
+
+Run tests:
+```bash
+make test              # Run all tests
+go test ./... -v       # Verbose output (shows skipped tests)
+```
+
+Note: Full test suite requires Go, pytest, and mix installed. Tests for unavailable frameworks will be skipped automatically.

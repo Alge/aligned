@@ -11,6 +11,12 @@ import (
 )
 
 func TestPytestDetectFramework(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	t.Run("detects pytest command", func(t *testing.T) {
 		connector := &PytestConnector{Executable: "pytest"}
 		got, err := connector.DetectFramework()
@@ -29,6 +35,12 @@ func TestPytestDetectFramework(t *testing.T) {
 }
 
 func TestPytestGenerateConfig(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	t.Run("generates config with correct type, executable, and path", func(t *testing.T) {
 		connector := &PytestConnector{Executable: "pytest"}
 		path := "/path/to/project"
@@ -53,6 +65,12 @@ func TestPytestGenerateConfig(t *testing.T) {
 }
 
 func TestPytestDiscoverTests(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	// This test verifies the connector uses `pytest --collect-only -q` by testing
 	// the behavior that would only work with those specific flags:
 	// - Tests are collected, not run (requires --collect-only flag)
@@ -70,14 +88,7 @@ def test_bar():
 `,
 	})
 
-	connector := &PytestConnector{Executable: "pytest"}
-
-	// Skip test if pytest is not installed
-	detected, err := connector.DetectFramework()
-	if err != nil || !detected {
-		t.Skip("pytest not installed, skipping test")
-	}
-
+	connector = &PytestConnector{Executable: "pytest"}
 	tests, err := connector.DiscoverTests(projectDir)
 
 	assert.NoError(t, err)
@@ -89,6 +100,12 @@ def test_bar():
 }
 
 func TestPytestDiscoverTestsNestedDirectories(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	// This test verifies pytest discovers tests in deeply nested directory structures
 	// and preserves the full path in test node IDs
 
@@ -105,14 +122,7 @@ def test_api_handler():
 `,
 	})
 
-	connector := &PytestConnector{Executable: "pytest"}
-
-	// Skip test if pytest is not installed
-	detected, err := connector.DetectFramework()
-	if err != nil || !detected {
-		t.Skip("pytest not installed, skipping test")
-	}
-
+	connector = &PytestConnector{Executable: "pytest"}
 	tests, err := connector.DiscoverTests(projectDir)
 
 	assert.NoError(t, err)
@@ -123,6 +133,12 @@ def test_api_handler():
 }
 
 func TestPytestEmptyTestSuite(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	t.Run("returns empty list for project with no tests", func(t *testing.T) {
 		projectDir := createPytestProject(t, map[string]string{
 			"main.py": `def main():
@@ -170,6 +186,12 @@ if __name__ == "__main__":
 }
 
 func TestPytestFrameworkNotFound(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	projectDir := createPytestProject(t, map[string]string{
 		"test_example.py": `import pytest
 
@@ -178,8 +200,8 @@ def test_foo():
 `,
 	})
 
-	connector := &PytestConnector{Executable: "nonexistent-pytest-binary"}
-	_, err := connector.DiscoverTests(projectDir)
+	connector = &PytestConnector{Executable: "nonexistent-pytest-binary"}
+	_, err = connector.DiscoverTests(projectDir)
 
 	assert.Error(t, err, "should return error when pytest command not found")
 
@@ -200,6 +222,12 @@ def test_foo():
 }
 
 func TestPytestInvalidProjectStructure(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	t.Run("handles import errors from missing dependencies", func(t *testing.T) {
 		projectDir := createPytestProject(t, map[string]string{
 			"test_example.py": `import nonexistent_module
@@ -249,6 +277,12 @@ def test_foo():
 }
 
 func TestPytestDiscoveryErrors(t *testing.T) {
+	connector := DefaultPytestConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("pytest not installed, skipping pytest connector tests")
+	}
+
 	// This test verifies errors are "meaningful" and "distinguishable" per specification
 	var importErr, syntaxErr, nonexistentErr error
 

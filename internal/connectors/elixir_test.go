@@ -11,6 +11,12 @@ import (
 )
 
 func TestElixirDetectFramework(t *testing.T) {
+	connector := DefaultElixirConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	t.Run("detects mix command", func(t *testing.T) {
 		connector := &ElixirConnector{Executable: "mix"}
 		got, err := connector.DetectFramework()
@@ -29,6 +35,12 @@ func TestElixirDetectFramework(t *testing.T) {
 }
 
 func TestElixirGenerateConfig(t *testing.T) {
+	connector := DefaultElixirConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	t.Run("generates config with correct type, executable, and path", func(t *testing.T) {
 		connector := &ElixirConnector{Executable: "mix"}
 		path := "/path/to/project"
@@ -53,6 +65,19 @@ func TestElixirGenerateConfig(t *testing.T) {
 }
 
 func TestElixirDiscoverTests(t *testing.T) {
+	// Verify mix is not just installed but actually works
+	connector := DefaultElixirConnector()
+	testDir := t.TempDir()
+	_, err := connector.DiscoverTests(testDir)
+	if err != nil && strings.Contains(err.Error(), "No version is set") {
+		t.Skip("mix not properly configured, skipping elixir connector tests")
+	}
+
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	projectDir := createElixirProject(t, map[string]string{
 		"test/example_test.exs": `defmodule ExampleTest do
   use ExUnit.Case
@@ -68,14 +93,7 @@ end
 `,
 	})
 
-	connector := &ElixirConnector{Executable: "mix"}
-
-	// Skip test if mix is not installed
-	detected, err := connector.DetectFramework()
-	if err != nil || !detected {
-		t.Skip("mix not installed, skipping test")
-	}
-
+	connector = &ElixirConnector{Executable: "mix"}
 	tests, err := connector.DiscoverTests(projectDir)
 
 	assert.NoError(t, err)
@@ -85,6 +103,19 @@ end
 }
 
 func TestElixirDiscoverTestsNestedDirectories(t *testing.T) {
+	// Verify mix is not just installed but actually works
+	connector := DefaultElixirConnector()
+	testDir := t.TempDir()
+	_, err := connector.DiscoverTests(testDir)
+	if err != nil && strings.Contains(err.Error(), "No version is set") {
+		t.Skip("mix not properly configured, skipping elixir connector tests")
+	}
+
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	projectDir := createElixirProject(t, map[string]string{
 		"test/unit/auth/login_test.exs": `defmodule Unit.Auth.LoginTest do
   use ExUnit.Case
@@ -104,14 +135,7 @@ end
 `,
 	})
 
-	connector := &ElixirConnector{Executable: "mix"}
-
-	// Skip test if mix is not installed
-	detected, err := connector.DetectFramework()
-	if err != nil || !detected {
-		t.Skip("mix not installed, skipping test")
-	}
-
+	connector = &ElixirConnector{Executable: "mix"}
 	tests, err := connector.DiscoverTests(projectDir)
 
 	assert.NoError(t, err)
@@ -121,6 +145,19 @@ end
 }
 
 func TestElixirEmptyTestSuite(t *testing.T) {
+	// Verify mix is not just installed but actually works
+	connector := DefaultElixirConnector()
+	testDir := t.TempDir()
+	_, err := connector.DiscoverTests(testDir)
+	if err != nil && strings.Contains(err.Error(), "No version is set") {
+		t.Skip("mix not properly configured, skipping elixir connector tests")
+	}
+
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	t.Run("returns empty list for project with no tests", func(t *testing.T) {
 		projectDir := createElixirProject(t, map[string]string{})
 
@@ -140,6 +177,12 @@ func TestElixirEmptyTestSuite(t *testing.T) {
 }
 
 func TestElixirFrameworkNotFound(t *testing.T) {
+	connector := DefaultElixirConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	projectDir := createElixirProject(t, map[string]string{
 		"test/example_test.exs": `defmodule ExampleTest do
   use ExUnit.Case
@@ -151,8 +194,8 @@ end
 `,
 	})
 
-	connector := &ElixirConnector{Executable: "nonexistent-mix-binary"}
-	_, err := connector.DiscoverTests(projectDir)
+	connector = &ElixirConnector{Executable: "nonexistent-mix-binary"}
+	_, err = connector.DiscoverTests(projectDir)
 
 	assert.Error(t, err, "should return error when mix command not found")
 
@@ -170,6 +213,12 @@ end
 }
 
 func TestElixirInvalidProjectStructure(t *testing.T) {
+	connector := DefaultElixirConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	t.Run("handles missing mix.exs", func(t *testing.T) {
 		tempDir := t.TempDir()
 		// Create test file without mix.exs
@@ -202,6 +251,12 @@ end
 }
 
 func TestElixirDiscoveryErrors(t *testing.T) {
+	connector := DefaultElixirConnector()
+	found, err := connector.DetectFramework()
+	if !found || err != nil {
+		t.Skip("mix not installed, skipping elixir connector tests")
+	}
+
 	var syntaxErr, nonexistentErr error
 
 	t.Run("handles syntax errors", func(t *testing.T) {
