@@ -46,9 +46,9 @@ release:
 	git add cmd/align/VERSION; \
 	git commit -m "Bump version to $$NEW"; \
 	git tag -a "v$$NEW" -m "Release v$$NEW"; \
-	git push origin master; \
-	git push origin "v$$NEW"; \
-	echo "Released v$$NEW"
+	echo ""; \
+	echo "Version bumped to v$$NEW and tagged locally."; \
+	echo "To push: git push origin master && git push origin v$$NEW"
 
 help:
 	@echo "Available targets:"
