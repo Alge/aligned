@@ -239,3 +239,22 @@ func TestInitListsElixirConnector(t *testing.T) {
 	assert.Contains(t, output, "elixir-exunit", "should list elixir-exunit connector")
 	assert.Contains(t, output, "elixir with exunit", "should describe elixir-exunit connector")
 }
+
+func TestInitListsGleamConnector(t *testing.T) {
+	tempDir := t.TempDir()
+
+	// Change to temp directory
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{"init"}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "should exit with code 0 when showing help")
+	output := strings.ToLower(stdout.String())
+
+	// Verify gleam-gleeunit connector is listed
+	assert.Contains(t, output, "gleam-gleeunit", "should list gleam-gleeunit connector")
+	assert.Contains(t, output, "gleam with gleeunit", "should describe gleam-gleeunit connector")
+}

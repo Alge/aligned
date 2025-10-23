@@ -101,8 +101,8 @@ func buildTree(sections []*spec.Section) []*spec.Section {
 // Returns empty string if no test reference found
 func ExtractTestReference(content string) string {
 	// Pattern matches: **Test:** followed by optional backtick, qualified test name, optional backtick
-	// Supports: TestName, package.TestName, module/package.TestName
-	pattern := regexp.MustCompile(`(?m)^\*\*[Tt]est:\*\*\s*` + "`?" + `([A-Za-z0-9_/.-]+)` + "`?")
+	// Supports: TestName, package.TestName, module/package.TestName, module@submodule.TestName (Gleam)
+	pattern := regexp.MustCompile(`(?m)^\*\*[Tt]est:\*\*\s*` + "`?" + `([A-Za-z0-9_/.@-]+)` + "`?")
 	
 	matches := pattern.FindStringSubmatch(content)
 	if len(matches) > 1 {

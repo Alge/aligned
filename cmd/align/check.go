@@ -65,7 +65,7 @@ func check(args []string, stdout, stderr io.Writer) int {
 	var allTests []string
 	for _, connectorCfg := range cfg.Connectors {
 		var connector connectors.Connector
-		
+
 		switch connectorCfg.Type {
 		case "go":
 			executable := connectorCfg.Executable
@@ -73,6 +73,12 @@ func check(args []string, stdout, stderr io.Writer) int {
 				executable = "go"
 			}
 			connector = connectors.NewGoConnector(executable)
+		case "gleam":
+			executable := connectorCfg.Executable
+			if executable == "" {
+				executable = "gleam"
+			}
+			connector = connectors.NewGleamConnector(executable)
 		default:
 			fmt.Fprintf(stderr, "Error: Unsupported connector type: %s\n", connectorCfg.Type)
 			return 1

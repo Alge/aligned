@@ -17,6 +17,7 @@ var connectorFactories = map[string]func() connectors.Connector{
 	"go-test":        func() connectors.Connector { return connectors.DefaultGoConnector() },
 	"python-pytest":  func() connectors.Connector { return connectors.DefaultPytestConnector() },
 	"elixir-exunit":  func() connectors.Connector { return connectors.DefaultElixirConnector() },
+	"gleam-gleeunit": func() connectors.Connector { return connectors.DefaultGleamConnector() },
 }
 
 func displayInitHelp(w io.Writer) {
@@ -26,6 +27,7 @@ func displayInitHelp(w io.Writer) {
 	fmt.Fprintln(w, "  go-test        - Go with built-in testing")
 	fmt.Fprintln(w, "  python-pytest  - Python with pytest")
 	fmt.Fprintln(w, "  elixir-exunit  - Elixir with ExUnit")
+	fmt.Fprintln(w, "  gleam-gleeunit - Gleam with gleeunit")
 }
 
 func initConfig(args []string, stdout, stderr io.Writer) int {
