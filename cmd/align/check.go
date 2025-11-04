@@ -91,6 +91,12 @@ func check(args []string, stdout, stderr io.Writer) int {
 				executable = "gleam"
 			}
 			connector = connectors.NewGleamConnector(executable)
+		case "vitest":
+			executable := connectorCfg.Executable
+			if executable == "" {
+				executable = "vitest"
+			}
+			connector = connectors.NewVitestConnector(executable)
 		default:
 			fmt.Fprintf(stderr, "Error: Unsupported connector type: %s\n", connectorCfg.Type)
 			return 1
