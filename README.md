@@ -49,13 +49,54 @@ When run the application should print the string 'Hello World!'
 
 You can then use the `$ align show` command to show a summary of the specification.
 ```
-$ align show examples/hello_world_spec.md 
+$ align show examples/hello_world_spec.md
 Hello world application
 · Application prints hello world
 ·   Test: test_prints_hello_world
 · Application return status 0 on success
 ·   Test: application_returns_status_0
 ```
+
+### Interfaces and Implementations
+
+Aligned supports defining reusable specification interfaces that can be implemented by multiple sections. This is useful for ensuring consistent structure across similar features.
+
+**Defining an Interface:**
+Mark a section as an interface by adding `[INTERFACE]` to its heading:
+
+```markdown
+## Database Connector [INTERFACE]
+
+### Connect to database
+Establishes connection to the database
+
+### Execute query
+Executes a query and returns results
+
+### Close connection
+Cleanly closes the database connection
+```
+
+**Implementing an Interface:**
+Mark a section as implementing an interface using `[IMPLEMENTS: InterfaceName]`:
+
+```markdown
+## PostgreSQL Connector [IMPLEMENTS: Database Connector]
+
+### Connect to database
+**Test:** `test_postgres_connect`
+
+### Execute query
+**Test:** `test_postgres_execute`
+
+### Close connection
+**Test:** `test_postgres_close`
+```
+
+When a section implements an interface:
+- It must contain all sections defined in the interface (case-insensitive matching)
+- Each section must have appropriate test references
+- Aligned validates the structure matches the interface during `check`
 
 ## Commands
 
