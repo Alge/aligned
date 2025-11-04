@@ -57,6 +57,11 @@ make build
 cd test-projects/vitest-sample
 ../../bin/align init javascript-vitest .
 
-# Discover tests
-../../bin/align check .
+# Update .align.yml to use local vitest installation
+# Change executable from "vitest" to "node_modules/.bin/vitest"
+
+# Check specification coverage
+../../bin/align check spec.md
 ```
+
+**Note:** Vitest is typically installed locally in `node_modules/.bin/`, not globally. The `.align.yml` file should specify the relative path `node_modules/.bin/vitest` as the executable.
