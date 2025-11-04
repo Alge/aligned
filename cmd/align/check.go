@@ -82,7 +82,7 @@ func check(args []string, stdout, stderr io.Writer) int {
 		case "elixir":
 			executable := connectorCfg.Executable
 			if executable == "" {
-				executable = "elixir"
+				executable = "mix"
 			}
 			connector = connectors.NewElixirConnector(executable)
 		case "gleam":
