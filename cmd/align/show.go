@@ -88,14 +88,14 @@ func printSection(section *spec.Section, indent int, stdout io.Writer) {
 	
 	// If section has a test, show it (green)
 	if section.TestName != "" {
-		fmt.Fprintf(stdout, "%s  %sTest: %s%s%s\n", 
+		fmt.Fprintf(stdout, "%s  %sTest: %s%s%s\n",
 			colorGray+strings.Repeat("· ", indent)+colorReset,
 			colorGray,
 			colorGreen,
 			section.TestName,
 			colorReset)
-	} else if section.IsLeaf() {
-		// Leaf section without test - show warning
+	} else if section.RequiresTest() {
+		// Leaf section without test - show warning (but not for interface sections)
 		fmt.Fprintf(stdout, "%s  %s⚠ Missing test reference%s\n",
 			colorGray+strings.Repeat("· ", indent)+colorReset,
 			colorRed,
