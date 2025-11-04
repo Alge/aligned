@@ -258,3 +258,22 @@ func TestInitListsGleamConnector(t *testing.T) {
 	assert.Contains(t, output, "gleam-gleeunit", "should list gleam-gleeunit connector")
 	assert.Contains(t, output, "gleam with gleeunit", "should describe gleam-gleeunit connector")
 }
+
+func TestInitListsVitestConnector(t *testing.T) {
+	tempDir := t.TempDir()
+
+	// Change to temp directory
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{"init"}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "should exit with code 0 when showing help")
+	output := strings.ToLower(stdout.String())
+
+	// Verify javascript-vitest connector is listed
+	assert.Contains(t, output, "javascript-vitest", "should list javascript-vitest connector")
+	assert.Contains(t, output, "javascript/typescript with vitest", "should describe javascript-vitest connector")
+}

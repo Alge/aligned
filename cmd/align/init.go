@@ -14,20 +14,22 @@ import (
 // Map of supported connectors to their factory functions
 // Format: [language]-[framework]
 var connectorFactories = map[string]func() connectors.Connector{
-	"go-test":        func() connectors.Connector { return connectors.DefaultGoConnector() },
-	"python-pytest":  func() connectors.Connector { return connectors.DefaultPytestConnector() },
-	"elixir-exunit":  func() connectors.Connector { return connectors.DefaultElixirConnector() },
-	"gleam-gleeunit": func() connectors.Connector { return connectors.DefaultGleamConnector() },
+	"go-test":          func() connectors.Connector { return connectors.DefaultGoConnector() },
+	"python-pytest":    func() connectors.Connector { return connectors.DefaultPytestConnector() },
+	"elixir-exunit":    func() connectors.Connector { return connectors.DefaultElixirConnector() },
+	"gleam-gleeunit":   func() connectors.Connector { return connectors.DefaultGleamConnector() },
+	"javascript-vitest": func() connectors.Connector { return connectors.DefaultVitestConnector() },
 }
 
 func displayInitHelp(w io.Writer) {
 	fmt.Fprintln(w, "Usage: align init <language-framework> <path>")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Supported connectors:")
-	fmt.Fprintln(w, "  go-test        - Go with built-in testing")
-	fmt.Fprintln(w, "  python-pytest  - Python with pytest")
-	fmt.Fprintln(w, "  elixir-exunit  - Elixir with ExUnit")
-	fmt.Fprintln(w, "  gleam-gleeunit - Gleam with gleeunit")
+	fmt.Fprintln(w, "  go-test           - Go with built-in testing")
+	fmt.Fprintln(w, "  python-pytest     - Python with pytest")
+	fmt.Fprintln(w, "  elixir-exunit     - Elixir with ExUnit")
+	fmt.Fprintln(w, "  gleam-gleeunit    - Gleam with gleeunit")
+	fmt.Fprintln(w, "  javascript-vitest - JavaScript/TypeScript with Vitest")
 }
 
 func initConfig(args []string, stdout, stderr io.Writer) int {

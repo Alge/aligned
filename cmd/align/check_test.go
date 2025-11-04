@@ -585,3 +585,26 @@ func TestGleamConnectorRegisteredInCheck(t *testing.T) {
 	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
 		"gleam connector should be registered in check command")
 }
+
+func TestVitestConnectorRegisteredInCheck(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: vitest\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	specContent := "# Test\n## Section\n**Test:** `test_example`\n"
+	specPath := filepath.Join(tempDir, "spec.md")
+	err = os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"check", specPath}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"vitest connector should be registered in check command")
+}
