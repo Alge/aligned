@@ -248,3 +248,65 @@ func TestShowDirectoryDisplaysAll(t *testing.T) {
 	assert.Contains(t, output, "Feature B", "should display section from second spec")
 	assert.Contains(t, output, "TestFeatureB", "should display test from second spec")
 }
+
+func TestShowInterfaceNoWarning(t *testing.T) {
+	// Create temp directory with spec file containing an interface
+	tempDir := t.TempDir()
+	specContent := `# Test Specification
+
+## API Interface [INTERFACE]
+
+### Connect to server
+Establishes connection to the server
+
+### Send request
+Sends a request to the server
+
+## Implementation [IMPLEMENTS: API Interface]
+
+### Connect to server
+**Test:** ` + "`TestConnect`" + `
+
+### Send request
+**Test:** ` + "`TestSendRequest`" + `
+`
+	specPath := filepath.Join(tempDir, "test.md")
+	err := os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{"show", specPath}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "should successfully process spec with interface")
+	output := stdout.String()
+
+	// Verify interface sections are displayed
+	assert.Contains(t, output, "API Interface", "should display interface section")
+	assert.Contains(t, output, "Connect to server", "should display interface subsection")
+	assert.Contains(t, output, "Send request", "should display interface subsection")
+
+	// Verify no warnings for interface sections
+	lines := strings.Split(output, "\n")
+	interfaceStarted := false
+	implementationStarted := false
+	for _, line := range lines {
+		if strings.Contains(line, "API Interface [INTERFACE]") {
+			interfaceStarted = true
+			implementationStarted = false
+		}
+		if strings.Contains(line, "Implementation [IMPLEMENTS:") {
+			interfaceStarted = false
+			implementationStarted = true
+		}
+
+		// While in interface section, should not see warnings
+		if interfaceStarted && strings.Contains(line, "⚠") {
+			t.Errorf("Interface section should not show warning: %s", line)
+		}
+
+		// Implementation sections should show tests
+		if implementationStarted && strings.Contains(line, "Connect to server") {
+			assert.Contains(t, output, "TestConnect", "implementation should show test reference")
+		}
+	}
+}

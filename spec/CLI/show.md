@@ -47,3 +47,9 @@ The `align show <directory>` command processes all markdown files in a directory
 When given a directory path, the show output includes all specifications from all markdown files in the directory.
 
 **Test:** `Alge/aligned/cmd/align.TestShowDirectoryDisplaysAll`
+
+## Do not warn about interface sections missing tests
+
+Interface sections should not display warnings about missing test references, as they define structure for implementations rather than requiring their own tests.
+
+**Test:** `Alge/aligned/cmd/align.TestShowInterfaceNoWarning`
