@@ -97,17 +97,23 @@ func buildTree(sections []*spec.Section) []*spec.Section {
 }
 
 // ExtractTestReference finds and extracts the test name from content
-// Looks for pattern: **Test:** `TestName` or **Test:** TestName
+// Looks for pattern: **Test:** `TestName`
 // Returns empty string if no test reference found
 func ExtractTestReference(content string) string {
-	// Pattern matches: **Test:** followed by optional backtick, qualified test name, optional backtick
-	// Supports: TestName, package.TestName, module/package.TestName, module@submodule.TestName (Gleam)
-	pattern := regexp.MustCompile(`(?m)^\*\*[Tt]est:\*\*\s*` + "`?" + `([A-Za-z0-9_/.@-]+)` + "`?")
-	
+	// Pattern matches: **Test:** followed by required backticks containing test reference
+	// The test reference must be in backticks and can contain any characters except backticks
+	// This supports various test name formats including those with spaces:
+	// - Go: package.TestName
+	// - Pytest: tests/test_file.py::TestClass::test_method
+	// - ExUnit: test/file.exs:Module:test description with spaces
+	// - Gleam: module@submodule.function_name_test
+	// - Vitest: src/file.test.js > describe > test name
+	pattern := regexp.MustCompile("(?m)^\\*\\*[Tt]est:\\*\\*\\s*`([^`]+)`")
+
 	matches := pattern.FindStringSubmatch(content)
 	if len(matches) > 1 {
 		return matches[1]
 	}
-	
+
 	return ""
 }

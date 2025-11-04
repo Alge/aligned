@@ -94,7 +94,7 @@ func TestExtractTestReference(t *testing.T) {
 		{
 			name:     "without backticks",
 			input:    "**Test:** TestSomething",
-			expected: "TestSomething",
+			expected: "", // Backticks are now required
 		},
 		{
 			name: "with surrounding text",
@@ -123,7 +123,17 @@ More text after.`,
 		{
 			name:     "qualified test name without backticks",
 			input:    "**Test:** testproject.TestFeature",
-			expected: "testproject.TestFeature",
+			expected: "", // Backticks are now required
+		},
+		{
+			name:     "test name with spaces (ExUnit)",
+			input:    "**Test:** `test/file.exs:Module:test description with spaces`",
+			expected: "test/file.exs:Module:test description with spaces",
+		},
+		{
+			name:     "test name with special characters (Vitest)",
+			input:    "**Test:** `src/file.test.js > describe > test name`",
+			expected: "src/file.test.js > describe > test name",
 		},
 	}
 
