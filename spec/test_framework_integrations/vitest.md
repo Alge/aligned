@@ -24,6 +24,14 @@ The javascript-vitest connector appears in `align init help` output with its nam
 
 **Test:** `Alge/aligned/cmd/align.TestInitListsVitestConnector`
 
+## Command Integration
+
+### Register in check command
+
+The vitest connector is registered in the check command, allowing configurations with type "vitest" to successfully discover tests without "unsupported connector type" errors.
+
+**Test:** `Alge/aligned/cmd/align.TestVitestConnectorRegisteredInCheck`
+
 ## Test Discovery
 
 ### Discover tests in project
