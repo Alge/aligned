@@ -232,3 +232,92 @@ func TestListTestsConfigInvalid(t *testing.T) {
 
 	assert.Equal(t, 1, exitCode, "should exit with code 1 when config invalid")
 }
+func TestGoConnectorRegisteredInListTests(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: go\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"list-tests"}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"go connector should be registered in list-tests command")
+}
+
+func TestPytestConnectorRegisteredInListTests(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: pytest\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"list-tests"}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"pytest connector should be registered in list-tests command")
+}
+
+func TestElixirConnectorRegisteredInListTests(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: elixir\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"list-tests"}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"elixir connector should be registered in list-tests command")
+}
+
+func TestGleamConnectorRegisteredInListTests(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: gleam\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"list-tests"}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"gleam connector should be registered in list-tests command")
+}
+
+func TestVitestConnectorRegisteredInListTests(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: vitest\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"list-tests"}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"vitest connector should be registered in list-tests command")
+}

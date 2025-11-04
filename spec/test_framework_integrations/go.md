@@ -32,6 +32,12 @@ The go connector is registered in the check command, allowing configurations wit
 
 **Test:** `Alge/aligned/cmd/align.TestGoConnectorRegisteredInCheck`
 
+### Register in list-tests command
+
+The connector is registered in the list-tests command, allowing configurations with this connector type to successfully list tests without "unsupported connector type" errors.
+
+**Test:** `Alge/aligned/cmd/align.TestGoConnectorRegisteredInListTests`
+
 ## Test Discovery
 
 ### Discover tests in project

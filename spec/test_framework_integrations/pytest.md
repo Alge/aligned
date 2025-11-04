@@ -32,6 +32,12 @@ The pytest connector is registered in the check command, allowing configurations
 
 **Test:** `Alge/aligned/cmd/align.TestPytestConnectorRegisteredInCheck`
 
+### Register in list-tests command
+
+The connector is registered in the list-tests command, allowing configurations with this connector type to successfully list tests without "unsupported connector type" errors.
+
+**Test:** `Alge/aligned/cmd/align.TestPytestConnectorRegisteredInListTests`
+
 ## Test Discovery
 
 ### Discover tests in project

@@ -24,6 +24,10 @@ The connector must be registered in the init command's connectorFactories map, a
 
 The connector must be registered in the check command's connector type switch statement, allowing the check command to use the connector for test discovery. Without this registration, initialized configurations will fail with "unsupported connector type" errors.
 
+### Register in list-tests command
+
+The connector must be registered in the list-tests command's connector type switch statement, allowing the list-tests command to use the connector for test discovery. Without this registration, the list-tests command will fail with "unsupported connector type" errors.
+
 ## Test Discovery
 
 ### Discover tests in project
