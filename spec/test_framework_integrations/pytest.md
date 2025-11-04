@@ -24,6 +24,14 @@ The python-pytest connector appears in `align init help` output with its name an
 
 **Test:** `Alge/aligned/cmd/align.TestInitListsPytestConnector`
 
+## Command Integration
+
+### Register in check command
+
+The pytest connector is registered in the check command, allowing configurations with type "pytest" to successfully discover tests without "unsupported connector type" errors.
+
+**Test:** `Alge/aligned/cmd/align.TestPytestConnectorRegisteredInCheck`
+
 ## Test Discovery
 
 ### Discover tests in project

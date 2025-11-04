@@ -466,3 +466,122 @@ func TestGetDataInvalid(t *testing.T) {}
 	assert.Contains(t, output, "process data", "should report which sections are missing")
 	assert.Contains(t, output, "Invalid Implementation", "should report which sections are missing")
 }
+
+func TestAllConnectorsRegisteredInInit(t *testing.T) {
+	// This test verifies all connectors are registered in the init command
+	// by checking the connectorFactories map contains expected connectors
+
+	expectedConnectors := []string{
+		"go-test",
+		"python-pytest",
+		"elixir-exunit",
+		"gleam-gleeunit",
+	}
+
+	for _, connectorType := range expectedConnectors {
+		t.Run(connectorType, func(t *testing.T) {
+			tempDir := t.TempDir()
+			originalDir, _ := os.Getwd()
+			defer os.Chdir(originalDir)
+			os.Chdir(tempDir)
+
+			var stdout, stderr bytes.Buffer
+			exitCode := run([]string{"init", connectorType, "."}, &stdout, &stderr)
+
+			assert.Equal(t, 0, exitCode, "%s should be registered in init command", connectorType)
+			assert.FileExists(t, filepath.Join(tempDir, ".align.yml"), "should create config file")
+		})
+	}
+}
+
+func TestGoConnectorRegisteredInCheck(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: go\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	specContent := "# Test\n## Section\n**Test:** `test_example`\n"
+	specPath := filepath.Join(tempDir, "spec.md")
+	err = os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"check", specPath}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"go connector should be registered in check command")
+}
+
+func TestPytestConnectorRegisteredInCheck(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: pytest\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	specContent := "# Test\n## Section\n**Test:** `test_example`\n"
+	specPath := filepath.Join(tempDir, "spec.md")
+	err = os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"check", specPath}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"pytest connector should be registered in check command")
+}
+
+func TestElixirConnectorRegisteredInCheck(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: elixir\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	specContent := "# Test\n## Section\n**Test:** `test_example`\n"
+	specPath := filepath.Join(tempDir, "spec.md")
+	err = os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"check", specPath}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"elixir connector should be registered in check command")
+}
+
+func TestGleamConnectorRegisteredInCheck(t *testing.T) {
+	tempDir := t.TempDir()
+	configContent := "connectors:\n  - type: gleam\n    path: .\n"
+	err := os.WriteFile(filepath.Join(tempDir, ".align.yml"), []byte(configContent), 0644)
+	assert.NoError(t, err)
+
+	specContent := "# Test\n## Section\n**Test:** `test_example`\n"
+	specPath := filepath.Join(tempDir, "spec.md")
+	err = os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	originalDir, _ := os.Getwd()
+	defer os.Chdir(originalDir)
+	os.Chdir(tempDir)
+
+	var stdout, stderr bytes.Buffer
+	run([]string{"check", specPath}, &stdout, &stderr)
+
+	stderrStr := stderr.String()
+	assert.NotContains(t, strings.ToLower(stderrStr), "unsupported connector type",
+		"gleam connector should be registered in check command")
+}

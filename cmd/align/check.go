@@ -73,6 +73,18 @@ func check(args []string, stdout, stderr io.Writer) int {
 				executable = "go"
 			}
 			connector = connectors.NewGoConnector(executable)
+		case "pytest":
+			executable := connectorCfg.Executable
+			if executable == "" {
+				executable = "pytest"
+			}
+			connector = connectors.NewPytestConnector(executable)
+		case "elixir":
+			executable := connectorCfg.Executable
+			if executable == "" {
+				executable = "elixir"
+			}
+			connector = connectors.NewElixirConnector(executable)
 		case "gleam":
 			executable := connectorCfg.Executable
 			if executable == "" {
