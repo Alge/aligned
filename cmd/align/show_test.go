@@ -186,3 +186,65 @@ func TestShowEmptyFile(t *testing.T) {
 
 	assert.Equal(t, 0, exitCode, "should successfully process empty files with exit code 0")
 }
+
+func TestShowDirectory(t *testing.T) {
+	// Create temp directory with spec files
+	tempDir := t.TempDir()
+
+	// Create a spec file in the directory
+	specContent := `# Test Specification
+
+## Feature One
+**Test:** ` + "`TestFeatureOne`" + `
+`
+	specPath := filepath.Join(tempDir, "test.md")
+	err := os.WriteFile(specPath, []byte(specContent), 0644)
+	assert.NoError(t, err)
+
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{"show", tempDir}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "should successfully process directory with exit code 0")
+	assert.Empty(t, stderr.String(), "should parse directory without errors")
+	assert.NotEmpty(t, stdout.String(), "should produce output when showing directory")
+}
+
+func TestShowDirectoryDisplaysAll(t *testing.T) {
+	// Create temp directory with multiple spec files
+	tempDir := t.TempDir()
+
+	// Create first spec file
+	spec1Content := `# Specification One
+
+## Feature A
+**Test:** ` + "`TestFeatureA`" + `
+`
+	spec1Path := filepath.Join(tempDir, "spec1.md")
+	err := os.WriteFile(spec1Path, []byte(spec1Content), 0644)
+	assert.NoError(t, err)
+
+	// Create second spec file
+	spec2Content := `# Specification Two
+
+## Feature B
+**Test:** ` + "`TestFeatureB`" + `
+`
+	spec2Path := filepath.Join(tempDir, "spec2.md")
+	err = os.WriteFile(spec2Path, []byte(spec2Content), 0644)
+	assert.NoError(t, err)
+
+	var stdout, stderr bytes.Buffer
+	exitCode := run([]string{"show", tempDir}, &stdout, &stderr)
+
+	assert.Equal(t, 0, exitCode, "should successfully process directory")
+	output := stdout.String()
+
+	// Verify both specifications are displayed
+	assert.Contains(t, output, "Specification One", "should display first spec")
+	assert.Contains(t, output, "Feature A", "should display section from first spec")
+	assert.Contains(t, output, "TestFeatureA", "should display test from first spec")
+
+	assert.Contains(t, output, "Specification Two", "should display second spec")
+	assert.Contains(t, output, "Feature B", "should display section from second spec")
+	assert.Contains(t, output, "TestFeatureB", "should display test from second spec")
+}

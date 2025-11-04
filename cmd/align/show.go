@@ -24,34 +24,53 @@ const (
 func show(args []string, stdout, stderr io.Writer) int {
 	// Check arguments
 	if len(args) < 1 {
-		fmt.Fprintln(stderr, "Usage: align show <spec-file>")
+		fmt.Fprintln(stderr, "Usage: align show <spec-file-or-directory>")
 		return 1
 	}
-	
+
 	specPath := args[0]
-	
-	// Check if file exists
-	content, err := os.ReadFile(specPath)
+
+	// Load specification (file or directory)
+	specification, err := loadSpecificationForShow(specPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			fmt.Fprintf(stderr, "Error: Spec file not found: %s\n", specPath)
+			fmt.Fprintf(stderr, "Error: Spec path not found: %s\n", specPath)
 			return 1
 		}
-		fmt.Fprintf(stderr, "Error reading spec file: %v\n", err)
+		fmt.Fprintf(stderr, "Error loading spec: %v\n", err)
 		return 1
 	}
-	
-	// Parse the spec
-	specification, err := parser.ParseMarkdown(string(content))
-	if err != nil {
-		fmt.Fprintf(stderr, "Error parsing spec: %v\n", err)
-		return 1
-	}
-	
+
 	// Display the spec structure
 	printSpecification(specification, stdout)
-	
+
 	return 0
+}
+
+func loadSpecificationForShow(path string) (*spec.Specification, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+
+	if !info.IsDir() {
+		// Single file
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+
+		specification, err := parser.ParseMarkdown(string(content))
+		if err != nil {
+			return nil, err
+		}
+		specification.FilePath = path
+
+		return specification, nil
+	}
+
+	// Directory - use the ParseDirectory function
+	return parser.ParseDirectory(path)
 }
 
 func printSpecification(specification *spec.Specification, stdout io.Writer) {
